@@ -7,7 +7,7 @@
  * 		I've placed all test code within an "async" closure
  * 		so I can benefit from the "await" syntax, which I prefer.
  *
- * 		I've also separated each "test" in it's own function 
+ * 		I've also separated each "test" in it's own function
  * 		expression, so I can benefit from function closures.
  */
 
@@ -39,7 +39,7 @@ const myBlockChain = new BlockChain(RESET)
 	/////////////////////////////
 	await (async function () {
 		output('2) Get Genesis Block', 'blue')
-		let block = await myBlockChain.getBlock(0)
+		const block = await myBlockChain.getBlock(0)
 		output(`Genesis block: ${JSON.stringify(block)}`)
 	})()
 
@@ -61,9 +61,9 @@ const myBlockChain = new BlockChain(RESET)
 		const valid2 = await myBlockChain.validateBlock(block5.height)
 		output(`Block #${block5.height} is valid: ${valid2}`)
 
-		const block6 = await myBlockChain.getBlock(6)		
+		const block6 = await myBlockChain.getBlock(6)
 		block6.previousBlockHash = 'jndininuud94j9i3j49dij9ijij39idj9oi'
-		
+
 		await myBlockChain._modifyBlock(block6.height, block6)
 		output(`Block #${block6.height} was modified`)
 		output(`Block #${block6.height} is valid: ${valid2}`)
@@ -94,7 +94,7 @@ const myBlockChain = new BlockChain(RESET)
 
 /**
  * Creating 10 test blocks in sequence.
- * 
+ *
  * @return {Promise<bool>} a promise of there it was successful or not.
  */
 function createTestBlocks() {
@@ -110,7 +110,7 @@ function createTestBlocks() {
 
 /**
  * Simple function for outputting colored text to stdout using console.log.
- * 
+ *
  * @param  {String} msg the string to print
  * @param  {String} color either red, green, or blue. Default is reset.
  */
