@@ -12,6 +12,6 @@ Run server on localhost:8000:
 
 ### Endpoints
 
-`GET /block/:height`
+`POST /block/`
 
-`POST /block/:height`
+`GET /block/:height`
