@@ -18,7 +18,7 @@ class Blockchain {
      * Wait until async operations are done before notifying system that
      * the blockchain is ready for use. If the reset flag was set to true
      * during instantiation, empty the store.
-     * 
+     *
      * @return {Promise<true>}
      */
     async onReady() {
@@ -28,14 +28,14 @@ class Blockchain {
     }
 
     /**
-     * Create the first block with special properties (height of zero and 
+     * Create the first block with special properties (height of zero and
      * no previous parent hash) and persist the block in the database.
-     * 
+     *
      * @return {Promise<Block>} a promise resolving to the block
      */
     async createGenesisBlock() {
         const block = Block.first()
-        
+
         await this.store.add(block.height, block.toString())
 
         return block
@@ -43,7 +43,7 @@ class Blockchain {
 
     /**
      * Get the most recent block.
-     * 
+     *
      * @return {Promise<Block>} a promise resolving to the block
      * @throws {Error} if no block is found in the database
      */
@@ -59,7 +59,7 @@ class Blockchain {
 
     /**
      * Get a block at a specific height.
-     * 
+     *
      * @param  {Integer} the height of the block
      * @return {Promise<Block>} a promise resolving to the block
      * @throws {Error} if block doesn't exist at the given height
@@ -69,14 +69,13 @@ class Blockchain {
             const str = await this.store.get(height)
             return Block.fromString(str)
         } catch (err) {
-            const keys = await this.store.keys()
-            throw new Error(`${height} not in ${keys}`)
+            throw new Error('404')
         }
     }
 
     /**
      * Get the height of the blockchain.
-     * 
+     *
      * @return {Promise<Integer>} a promise resolving to the height
      */
     async getBlockHeight() {
@@ -84,9 +83,9 @@ class Blockchain {
     }
 
     /**
-     * Prepare the block to be added to the chain, and persist the 
+     * Prepare the block to be added to the chain, and persist the
      * block in the database.
-     * 
+     *
      * @param {Promise<Block>} a promise resolving to the block
      */
     async addBlock(block) {
@@ -111,7 +110,7 @@ class Blockchain {
 
     /**
      * Validate a block at a given height.
-     * 
+     *
      * @param  {Integer} height of the block to be validated
      * @return {Promise<Boolean>} a promise resolving to the validity of the block
      */
@@ -123,7 +122,7 @@ class Blockchain {
 
     /**
      * Validate the entire chain.
-     * 
+     *
      * @return {Promise<Array>} a promise resolving to an array of invalid blocks
      */
     async validateChain() {
@@ -136,7 +135,7 @@ class Blockchain {
 
     /**
      * A test method used for replacing a block.
-     * 
+     *
      * @param  {Integer} the height of the block to modify
      * @param  {Block} the replacement block
      * @return {Promise<Block>} a promise resolving to the replacement block
@@ -145,7 +144,7 @@ class Blockchain {
         await this.store.add(height, replacementBlock.toString())
 
         return replacementBlock
-    }   
+    }
 }
 
 module.exports = Blockchain;
