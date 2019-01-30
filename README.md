@@ -8,10 +8,10 @@ Run server on localhost:8000:
 
 ### Framework
 
-Express 4.16.4
+`Express 4.16.4`
 
 ### Endpoints
 
-GET /block/:height
+`GET /block/:height`
 
-POST /block/:height
+`POST /block/:height`
