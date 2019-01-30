@@ -1,5 +1,5 @@
 const level = require('level')
-const CHAINDATA = './chaindata'
+const dataDir = '../data'
 
 /**
  * Store class
@@ -11,13 +11,13 @@ class Store {
      * Constructor for Store
      */
     constructor() {
-        this.db = level(CHAINDATA)
+        this.db = level(dataDir)
     }
 
     /**
      * Get an item from LevelDb
-     * 
-     * @param  {Integer} the height of the block 
+     *
+     * @param  {Integer} the height of the block
      * @return {Promise<String>} promise resolving to the value
      */
     get(key) {
@@ -26,7 +26,7 @@ class Store {
 
     /**
      * Add a new item to LevelDb
-     * 
+     *
      * @param {String} key
      * @param {String} value
      * @return {Promise<String>} promise resolving to the value
@@ -37,7 +37,7 @@ class Store {
 
     /**
      * Get the "height" of the database. This is equal to the count of all keys
-     * 
+     *
      * @return {Promise<Integer>} promise resolving to an integer representing the height.
      */
     currentHeight() {
@@ -50,7 +50,7 @@ class Store {
 
     /**
      * Utility method returning all keys in the database.
-     * 
+     *
      * @return {Promise<Array>} promise resolving to an array of all database keys.
      */
     keys() {
@@ -63,7 +63,7 @@ class Store {
 
     /**
      * Utility method for emptying all items from the database. Useful for development.
-     * 
+     *
      * @return {Promise<Boolean>} promise resolving to true.
      */
     empty() {
