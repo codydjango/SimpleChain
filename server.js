@@ -8,8 +8,11 @@ const port = 8000
 const router = express.Router()
 const myBlockChain = new BlockChain()
 
-router.get('/block/:height', getBlockByHeight)
+const listening = () => console.log(`API listening on localhost:${port}`)
+const http404 = (req, res) => res.status(404).json({ status: 'not found' })
 
+router.get('/block/:height', getBlockByHeight)
+router.get('*', http404)
 
 ;(async () => {
     await myBlockChain.onReady()
@@ -21,12 +24,10 @@ router.get('/block/:height', getBlockByHeight)
 
 
 async function getBlockByHeight(req, res) {
-    const block = await myBlockChain.getBlock(req.params.height)
-
-    res.json(block)
-}
-
-
-function listening() {
-    console.log(`API listening on localhost:${port}`)
+    try {
+        const block = await myBlockChain.getBlock(req.params.height)
+        res.json(block)
+    } catch (err) {
+        http404(req, res)
+    }
 }
