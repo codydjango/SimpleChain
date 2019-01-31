@@ -69,7 +69,7 @@ class Blockchain {
             const str = await this.store.get(height)
             return Block.fromString(str)
         } catch (err) {
-            throw new Error('404')
+            throw new Error('block not found')
         }
     }
 
@@ -147,4 +147,4 @@ class Blockchain {
     }
 }
 
-module.exports = Blockchain;
+module.exports = Blockchain
