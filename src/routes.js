@@ -1,6 +1,6 @@
 const express = require('express')
 const NotaryController = require('./controllers/Notary')
-const memPool = require('./mempool')
+const mempool = require('./mempool')
 
 const routes = express.Router()
 const controller = new NotaryController()
@@ -45,7 +45,7 @@ function validateBody(req, res, next) {
  * @param  {Function} next Express middleware
  */
 function validatePermittedRequest(req, res, next) {
-    if (!memPool.isPermitted(req.body.address)) next(new Error('422'))
+    if (!mempool.isPermitted(req.body.address)) next(new Error('422'))
     next()
 }
 
