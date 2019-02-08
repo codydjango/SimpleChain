@@ -1,6 +1,6 @@
 const express = require('express')
-const NotaryController = require('../controllers/Notary')
-const memPool = require('../mempool')
+const NotaryController = require('./controllers/Notary')
+const memPool = require('./mempool')
 
 const routes = express.Router()
 const controller = new NotaryController()
