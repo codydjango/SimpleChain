@@ -17,31 +17,33 @@ class ValidationController {
     }
 
     /**
-     * Controller method for getting a block by height.
+     * User create a validation request.
      *
      * @param  {Request} req Express request instance
      * @param  {Response} res Express response instance
      * @param  {Function} next Express middleware
      */
     async request(req, res, next) {
-        const request = this.memPool.addValidationRequest(req.body.address)
-
-        console.log('request', request)
-
-        res.json(request)
+        try {
+            res.json(this.memPool.addValidationRequest(req.body.address))
+        } catch (err) {
+            return next(err)
+        }
     }
 
+    /**
+     * User sends back the message with an address and signature.
+     *
+     * @param  {Request} req Express request instance
+     * @param  {Response} res Express response instance
+     * @param  {Function} next Express middleware
+     */
     async validate(req, res, next) {
-        const address = req.address
-        const signature = req.signature
-        this.mempool.validateRequestByWallet(message, address, signature)
-    }
-
-    async claim(req, res, next) {
-        this.mempool.claim({
-            address: req.address,
-            star: req.star
-        })
+        try {
+            res.json(this.memPool.validateRequestByWallet(req.body.address, req.body.signature))
+        } catch (err) {
+            return next(err)
+        }
     }
 }
 
