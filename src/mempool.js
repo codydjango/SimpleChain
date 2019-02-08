@@ -56,6 +56,7 @@ class ValidationRequest {
      */
     sign() {
         this.messageSignature = true
+        delete this.validationWindow
 
         return this
     }
