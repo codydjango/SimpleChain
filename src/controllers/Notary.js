@@ -72,6 +72,13 @@ class NotaryController {
     }
 }
 
+/**
+ * A method for sanitizing the star data before sending it to the blockchain.
+ * This includes hex-encoding the star story.
+ *
+ * @param  {obj} star the star object
+ * @return {obj} a cleaned new star
+ */
 function clean(star) {
     const validKeys = ['ra', 'dec', 'cen', 'mag', 'story']
     const cleaned = {}
@@ -88,6 +95,12 @@ function clean(star) {
 }
 
 
+/**
+ * Utility method for converting from hex back to ascii.
+ *
+ * @param  {String} str the hex string
+ * @return {String} the ascii string
+ */
 function fromHex(str) {
     let result = ''
 
