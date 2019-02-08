@@ -14,7 +14,7 @@ class ValidationRequest {
      * @return {ValidationRequest} the newly created ValidationRequest instance
      */
     static create(address) {
-        return new this(address)
+        return new ValidationRequest(address)
     }
 
     /**
