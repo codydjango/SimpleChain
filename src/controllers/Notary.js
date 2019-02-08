@@ -82,7 +82,7 @@ function clean(star) {
         }
     }
 
-    if (star.story) cleaned.story = Buffer(star.story).toString('hex')
+    if (star.story) cleaned.story = Buffer.from(star.story).toString('hex')
 
     return cleaned
 }
