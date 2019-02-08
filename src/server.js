@@ -1,23 +1,22 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const expressValidator = require('express-validator')
-const BlockChain = require('./BlockChain.js')
-const getRoutes = require('./routes')
+const blockchain = require('./blockchain')
+const routes = require('./routes')
 
 const app = express()
 const port = 8000
-const blockChain = new BlockChain()
 
 /**
  * Entrypoint into application. Instantiates blockchain, waits until
  * it's ready and then starts the express server listening on port 8000.
  */
 ;(async () => {
-    await blockChain.onReady()
+    await blockchain.onReady()
 
     app.use(bodyParser.json())
     app.use(expressValidator())
-    app.use(getRoutes(blockChain))
+    app.use(routes)
     app.use(errorHandler)
     app.listen(port, () => console.log(`API listening on localhost:${ port }`))
 })()
@@ -44,6 +43,7 @@ function errorHandler (err, req, res, next) {
                 status: 'fails validation',
                 payload: err.errors
             })
+
         default:
             return res.status(500).json({
                 status: (err.message) ? `server error: ${ err.message }` : 'server error'

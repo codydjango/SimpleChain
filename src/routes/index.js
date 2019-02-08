@@ -1,18 +1,51 @@
 const express = require('express')
-const blockRoutes = require('./block')
-const validationRoutes = require('./validation')
+const NotaryController = require('../controllers/Notary')
+const memPool = require('../mempool')
+
+const routes = express.Router()
+const controller = new NotaryController()
+
+routes.post('/requestValidation', controller.request)
+routes.post('/message-signature/validate', controller.validate)
+routes.post('/block', validateBody, validateRequest, controller.register)
+// routes.get('/block/:height', blockController.getBlockByHeight)
+// routes.get('*', (req, res, next) => next(new Error('404')))
+
+
 
 /**
-* Utility factory function for Express router.
-* @param  {BlockChain} blockChain instance
-* @return {Router} the express router
+* Validation function for Express-Validator middleware.
+*
+* @param  {Request} req Express request instance
+* @param  {Response} res Express response instance
+* @param  {Function} next Express middleware
 */
-module.exports = (blockChain) => {
-    const routes = express.Router()
+function validateBody(req, res, next) {
+    req.check('address', 'Address is required').notEmpty()
+    req.check('star', 'Star data is required').notEmpty()
 
-    routes.use(blockRoutes(blockChain))
-    routes.use(validationRoutes())
-    routes.get('*', (req, res, next) => next(new Error('404')))
+    const errors = req.validationErrors()
 
-    return routes
+    if (errors) {
+        const err = new Error('422')
+
+        err.errors = errors.map(v => v.msg)
+
+        next(err)
+    } else {
+        next()
+    }
 }
+
+/**
+ * Validation on whether a signed validationRequest exists in the mempool.
+ *
+ * @param  {Request} req Express request instance
+ * @param  {Response} res Express response instance
+ * @param  {Function} next Express middleware
+ */
+function validateRequest(req, res, next) {
+    if (!memPool.isSigned(req.address)) next(new Error('422'))
+}
+
+module.exports = routes

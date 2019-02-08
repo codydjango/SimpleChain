@@ -10,7 +10,6 @@ class Blockchain {
      * @param  {Boolean} whether or not to reset the database, defaults to false
      */
     constructor(reset = false) {
-        this.reset = reset
         this.store = new Store()
     }
 
@@ -21,8 +20,8 @@ class Blockchain {
      *
      * @return {Promise<true>}
      */
-    async onReady() {
-        if (this.reset) return await this.store.empty()
+    async onReady(reset = false) {
+        if (reset) return await this.store.empty()
 
         return true
     }
@@ -147,9 +146,9 @@ class Blockchain {
     }
 }
 
-// Export singleton -- we only ever want one mempool.
+// Export singleton -- we only ever want one blockchain.
 let instance = undefined
-module.exports = function(...args) {
+module.exports = ((...args) => {
     if (instance) return instance
     return instance = new Blockchain(...args)
-}
+})()
