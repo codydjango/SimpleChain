@@ -1,8 +1,9 @@
 const express = require('express')
 const { check, validationResult } = require('express-validator/check')
-const NotaryController = require('./controllers/Notary')
-const mempool = require('./mempool')
-const { NotFoundException, ValidationException } = require('./Exception')
+
+const NotaryController = require('../controllers/Notary')
+const mempool = require('../services/mempool')
+const { NotFoundException, ValidationException } = require('../exceptions')
 
 const routes = express.Router()
 const controller = new NotaryController()

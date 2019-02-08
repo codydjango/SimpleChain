@@ -1,6 +1,6 @@
 const Store = require('./Store')
 const Block = require('./Block')
-const { NotFoundException } = require('./Exception')
+const NotFoundException = require('../exceptions/NotFoundException')
 
 /**
  * Blockchain class
@@ -133,9 +133,4 @@ class Blockchain {
     }
 }
 
-// Export singleton -- we only ever want one blockchain.
-let instance = undefined
-module.exports = ((...args) => {
-    if (instance) return instance
-    return instance = new Blockchain(...args)
-})()
+module.exports = Blockchain

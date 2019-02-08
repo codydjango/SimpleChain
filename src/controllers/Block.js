@@ -1,5 +1,5 @@
-const blockchain require('./blockchain')
-const Block = require('./Block')
+const blockchain require('../services/blockchain')
+const Block = require('../models/Block')
 
 /**
  * Express Controller for BlockChain endpoints.

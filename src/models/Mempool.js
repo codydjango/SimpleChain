@@ -1,5 +1,6 @@
 const bitcoinMessage = require('bitcoinjs-message')
-const { ValidationException } = require('./Exception')
+
+const ValidationException = require('../exceptions/ValidationException')
 
 const REGISTRY = 'starRegistry'
 const WINDOW_TIME = 1000 * 60 * 5
@@ -147,9 +148,4 @@ class Mempool {
     }
 }
 
-// Export singleton -- we only ever want one mempool.
-let instance = undefined
-module.exports = ((...args) => {
-    if (instance) return instance
-    return instance = new Mempool(...args)
-})()
+module.exports = Mempool
