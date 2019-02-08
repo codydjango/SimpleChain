@@ -1,4 +1,4 @@
-const memPool = require('../mempool')
+const mempool = require('../mempool')
 const blockchain = require('../blockchain')
 const Block = require('../Block')
 
@@ -23,7 +23,7 @@ class NotaryController {
      */
     async request(req, res, next) {
         try {
-            res.json(memPool.addValidationRequest(req.body.address))
+            res.json(mempool.addValidationRequest(req.body.address))
         } catch (err) {
             return next(err)
         }
@@ -38,7 +38,7 @@ class NotaryController {
      */
     async validate(req, res, next) {
         try {
-            res.json(memPool.validateRequestByWallet(req.body.address, req.body.signature))
+            res.json(mempool.validateRequestByWallet(req.body.address, req.body.signature))
         } catch (err) {
             return next(err)
         }
