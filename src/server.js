@@ -3,6 +3,7 @@ const bodyParser = require('body-parser')
 const expressValidator = require('express-validator')
 const blockchain = require('./blockchain')
 const routes = require('./routes')
+const { NotFoundException, ValidationException } = require('./Exception')
 
 const app = express()
 const port = 8000
@@ -33,18 +34,18 @@ const port = 8000
 * @param  {Function} next Express middleware instance
 */
 function errorHandler (err, req, res, next) {
-    switch (err.message) {
-        case '404':
+    switch (true) {
+        case err instanceof NotFoundException:
             return res.status(404).json({
-                status: 'not found'
+                status: err.message
             })
-        case '422':
+        case err instanceof ValidationException:
             return res.status(422).json({
-                status: 'fails validation',
-                payload: err.errors
+                status: err.message,
+                payload: err.data
             })
-
         default:
+            // uncaught error, notify admin
             return res.status(500).json({
                 status: (err.message) ? `server error: ${ err.message }` : 'server error'
             })

@@ -1,9 +1,7 @@
 const SHA256 = require('crypto-js/sha256')
 
 /**
- * Block class
- *
- * Some static utility methods.
+ * Block class with some static utility methods.
  */
 class Block {
     /**
@@ -45,6 +43,8 @@ class Block {
         block.previousBlockHash = obj.previousBlockHash
         block.time = obj.time
         block.hash = obj.hash
+
+        block.decodeStory()
 
         return block
     }
@@ -110,6 +110,36 @@ class Block {
     toString() {
         return JSON.stringify(this).toString()
     }
+
+    /**
+     * Decode the story as storyDecoded if it exists, otherwise
+     * fail silently.
+     *
+     * @return {Block} the modified block for easy chaining.
+     */
+    decodeStory() {
+        try {
+            this.body.star.storyDecoded = fromHex(this.body.star.story)
+        } catch (err) {}
+
+        return this
+    }
+}
+
+/**
+ * Utility method for converting from hex back to ascii.
+ *
+ * @param  {String} str the hex string
+ * @return {String} the ascii string
+ */
+function fromHex(str) {
+    let result = ''
+
+    for (let i = 0; i < str.length; i += 2) {
+        result += String.fromCharCode(parseInt(str.substr(i, 2), 16));
+    }
+
+    return result
 }
 
 module.exports = Block

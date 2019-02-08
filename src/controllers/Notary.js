@@ -45,7 +45,7 @@ class NotaryController {
     }
 
     /**
-     * User can now register something.
+     * User can now register a star. If the user has provided a story, store it as hex.
      *
      * @param  {Request} req Express request instance
      * @param  {Response} res Express response instance
@@ -56,59 +56,22 @@ class NotaryController {
 
         const body = {
             address: req.body.address,
-            star: clean(req.body.star)
+            star: req.body.star
         }
+
+        if (star.story) star.story = Buffer.from(star.story).toString('hex')
 
         try {
             block = await Block.create(body)
             block = await blockchain.addBlock(block)
 
-            if (block.star.story) block.star.storyDecoded = fromHex(block.star.story)
+            mempool.removePermission(body.address)
 
             res.json(block)
         } catch (err) {
             next(err)
         }
     }
-}
-
-/**
- * A method for sanitizing the star data before sending it to the blockchain.
- * This includes hex-encoding the star story.
- *
- * @param  {obj} star the star object
- * @return {obj} a cleaned new star
- */
-function clean(star) {
-    const validKeys = ['ra', 'dec', 'cen', 'mag', 'story']
-    const cleaned = {}
-
-    for (let key in star) {
-        if (validKeys.indexOf(key) != -1) {
-            cleaned[key] = star[key]
-        }
-    }
-
-    if (star.story) cleaned.story = Buffer.from(star.story).toString('hex')
-
-    return cleaned
-}
-
-
-/**
- * Utility method for converting from hex back to ascii.
- *
- * @param  {String} str the hex string
- * @return {String} the ascii string
- */
-function fromHex(str) {
-    let result = ''
-
-    for (let i = 0; i < str.length; i += 2) {
-        result += String.fromCharCode(parseInt(str.substr(i, 2), 16));
-    }
-
-    return result
 }
 
 module.exports = NotaryController

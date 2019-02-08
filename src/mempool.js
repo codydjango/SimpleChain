@@ -1,4 +1,5 @@
-const bitcoinMessage = require('bitcoinjs-message');
+const bitcoinMessage = require('bitcoinjs-message')
+const { ValidationException } = require('./Exception')
 
 const REGISTRY = 'starRegistry'
 const WINDOW_TIME = 1000 * 60 * 5
@@ -121,11 +122,12 @@ class Mempool {
      *
      * @param {String} address the wallet address
      * @param {String} signature
+     * @throws {ValidationException} if no valid ValidationRequest or if signature is invalid
      * @return {[type]} [description]
      */
     validateRequestByWallet(address, signature) {
-        if (!this.requests[address]) throw new Error('422')
-        if (!bitcoinMessage.verify(this.requests[address].message, address, signature)) throw new Error('422')
+        if (!this.requests[address]) throw new ValidationException('No ValidationRequest for this address in Mempool')
+        if (!bitcoinMessage.verify(this.requests[address].message, address, signature)) throw new ValidationException('Signature not valid')
 
         this.permitted[address] = this.requests[address].sign()
         delete this.requests[address]
@@ -138,6 +140,10 @@ class Mempool {
 
     isPermitted(address) {
         return (this.permitted[address])
+    }
+
+    removePermission(address) {
+        delete this.permitted[address]
     }
 }
 

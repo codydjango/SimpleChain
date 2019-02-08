@@ -1,5 +1,6 @@
 const Store = require('./Store')
 const Block = require('./Block')
+const { NotFoundException } = require('./Exception')
 
 /**
  * Blockchain class
@@ -44,12 +45,12 @@ class Blockchain {
      * Get the most recent block.
      *
      * @return {Promise<Block>} a promise resolving to the block
-     * @throws {Error} if no block is found in the database
+     * @throws {NotFoundException} if no block is found in the database
      */
     async getBestBlock() {
         const height = await this.getBlockHeight()
 
-        if (height === 0) throw new Error('No best block')
+        if (height === 0) throw new NotFoundException()
 
         const block = await this.getBlock(height - 1)
 
@@ -61,14 +62,13 @@ class Blockchain {
      *
      * @param  {Integer} the height of the block
      * @return {Promise<Block>} a promise resolving to the block
-     * @throws {Error} if block doesn't exist at the given height
+     * @throws {NotFoundException} if block doesn't exist at the given height
      */
     async getBlock(height) {
         try {
-            const str = await this.store.get(height)
-            return Block.fromString(str)
+            return Block.fromString(await this.store.get(height))
         } catch (err) {
-            throw new Error('block not found')
+            throw new NotFoundException()
         }
     }
 
@@ -93,7 +93,7 @@ class Blockchain {
         try {
             bestBlock = await this.getBestBlock()
         } catch (err) {
-            if (err.message !== 'No best block') throw err
+            if (!err instanceof BlockNotFoundException) throw err
             bestBlock = await this.createGenesisBlock()
         }
 
@@ -104,7 +104,7 @@ class Blockchain {
 
         await this.store.add(block.height, block.toString())
 
-        return block
+        return block.decodeStory()
     }
 
     /**
@@ -130,19 +130,6 @@ class Blockchain {
         const blocks = await Promise.all(promises)
 
         return blocks.filter(block => !block.isValid())
-    }
-
-    /**
-     * A test method used for replacing a block.
-     *
-     * @param  {Integer} the height of the block to modify
-     * @param  {Block} the replacement block
-     * @return {Promise<Block>} a promise resolving to the replacement block
-     */
-    async _modifyBlock(height, replacementBlock) {
-        await this.store.add(height, replacementBlock.toString())
-
-        return replacementBlock
     }
 }
 
