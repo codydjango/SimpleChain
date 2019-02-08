@@ -1,6 +1,6 @@
-const mempool = require('../services/mempool')
-const blockchain = require('../services/blockchain')
-const Block = require('../models/Block')
+const mempool = require('services/mempool')
+const blockchain = require('services/blockchain')
+const Block = require('models/Block')
 
 /**
  * Express Controller for Notary service.

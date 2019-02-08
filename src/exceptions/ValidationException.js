@@ -1,4 +1,4 @@
-const Exception = require('./Exception')
+const Exception = require('exceptions/Exception')
 
 /**
  * Exception used for specific validation failures.

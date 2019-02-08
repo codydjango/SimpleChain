@@ -1,5 +1,5 @@
 const level = require('level')
-const dataDir = '../../data'
+const dataDir = '../data'
 
 /**
  * Store class

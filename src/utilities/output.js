@@ -1,4 +1,3 @@
-
 /**
  * Simple function for outputting colored text to stdout using console.log.
  *

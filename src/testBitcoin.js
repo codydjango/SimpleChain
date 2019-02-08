@@ -1,7 +1,6 @@
 const bitcoin = require('bitcoinjs-lib')
 const bitcoinMessage = require('bitcoinjs-message')
-
-const output = require('./utilities/output')
+const output = require('utilities/output')
 
 ;(function testVerify() {
     output('test bitcoin verify', 'blue')

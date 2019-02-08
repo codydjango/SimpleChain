@@ -1,6 +1,5 @@
 const bitcoinMessage = require('bitcoinjs-message')
-
-const ValidationException = require('../exceptions/ValidationException')
+const ValidationException = require('exceptions/ValidationException')
 
 const REGISTRY = 'starRegistry'
 const WINDOW_TIME = 1000 * 60 * 5

@@ -1,4 +1,4 @@
-const Mempool = require('../models/Mempool')
+const Mempool = require('models/Mempool')
 
 // Export singleton -- we only ever want one mempool.
 let instance = undefined

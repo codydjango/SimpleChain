@@ -1,6 +1,6 @@
-const Store = require('./Store')
-const Block = require('./Block')
-const NotFoundException = require('../exceptions/NotFoundException')
+const NotFoundException = require('exceptions/NotFoundException')
+const Store = require('models/Store')
+const Block = require('models/Block')
 
 /**
  * Blockchain class

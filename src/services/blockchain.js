@@ -1,4 +1,4 @@
-const Blockchain = require('../models/Blockchain')
+const Blockchain = require('models/Blockchain')
 
 // Export singleton -- we only ever want one blockchain.
 let instance = undefined

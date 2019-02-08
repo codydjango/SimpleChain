@@ -2,9 +2,9 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const expressValidator = require('express-validator')
 
-const blockchain = require('./services/blockchain')
-const routes = require('./routes')
-const { NotFoundException, ValidationException } = require('./exceptions')
+const blockchain = require('services/blockchain')
+const routes = require('routes')
+const { NotFoundException, ValidationException } = require('exceptions')
 
 const app = express()
 const port = 8000
