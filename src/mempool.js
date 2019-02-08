@@ -54,10 +54,19 @@ class ValidationRequest {
      *
      * @return {ValidationRequest} itself for easy chaining
      */
-    signed() {
+    sign() {
         this.messageSignature = true
 
         return this
+    }
+
+    /**
+     * The signature is valid and the user can register.
+     *
+     * @return {ValidationRequest} itself for easy chaining
+     */
+    isSigned() {
+        return (this.messageSignature = true)
     }
 }
 
@@ -70,9 +79,9 @@ class Mempool {
      * Constructor method for mempool
      */
     constructor() {
-        this.requests = {}
         this.timeouts = {}
-        this.valid = {}
+        this.requests = {}
+        this.permitted = {}
     }
 
     /**
@@ -107,44 +116,27 @@ class Mempool {
     }
 
     /**
-     * Method for validating a pending ValidationRequest
+     * Method for validating a pending ValidationRequest.
+     *
      * @param {String} address the wallet address
      * @param {String} signature
      * @return {[type]} [description]
      */
     validateRequestByWallet(address, signature) {
-        const request = this.requests[address]
+        if (!this.requests[address]) throw new Error('422')
+        if (!bitcoinMessage.verify(this.requests[address].message, address, signature)) throw new Error('422')
 
-        if (!request) {
-            console.log('no request for address')
-            throw new Error('422')
-        }
-
-        if (!bitcoinMessage.verify(request.message, address, signature)) {
-            console.log('fails verify', request.message, address, signature)
-            throw new Error('422')
-        }
-
+        this.permitted[address] = this.requests[address].sign()
         delete this.requests[address]
-
-        this.valid[address] = request.signed()
 
         return {
             registerStar: true,
-            status: {
-                address: request.walletAddress,
-                requestTimeStamp: request.timestamp,
-                message: request.message,
-                validationWindow: request.validationWindow,
-                messageSignature: request.messageSignature
-            }
+            status: this.permitted[address]
         }
     }
 
-    isSigned(address) {
-        const request = this.valid[address]
-
-        return (request && request.signed())
+    isPermitted(address) {
+        return (this.permitted[address])
     }
 }
 

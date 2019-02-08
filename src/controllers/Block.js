@@ -1,17 +1,14 @@
-const Block = require('./Block.js')
+const blockchain require('./blockchain')
+const Block = require('./Block')
 
 /**
  * Express Controller for BlockChain endpoints.
  */
 class BlockController {
     /**
-     * Constructor for the BlockController class. Instantiate with the
-     * ready blockchain and bind the controller methods.
-     *
-     * @param  {BlockChain} blockChain instance
+     * Constructor for the BlockController class. Binds the controller methods.
      */
-    constructor(blockChain) {
-        this.blockChain = blockChain
+    constructor() {
         this.getBlockByHeight = this.getBlockByHeight.bind(this)
         this.postBlock = this.postBlock.bind(this)
     }
@@ -26,7 +23,7 @@ class BlockController {
         let block
 
         try {
-            block = await this.blockChain.getBlock(req.params.height)
+            block = await blockchain.getBlock(req.params.height)
             res.json(block)
         } catch (err) {
             if (err.message = 'block not found') return next(new Error('404'))
@@ -46,7 +43,7 @@ class BlockController {
 
         try {
             block = await Block.create(req.body.body)
-            block = await this.blockChain.addBlock(block)
+            block = await blockchain.addBlock(block)
             res.json(block)
         } catch (err) {
             next(err)

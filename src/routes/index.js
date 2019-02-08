@@ -7,7 +7,7 @@ const controller = new NotaryController()
 
 routes.post('/requestValidation', controller.request)
 routes.post('/message-signature/validate', controller.validate)
-routes.post('/block', validateBody, validateSignedRequest, controller.register)
+routes.post('/block', validateBody, validatePermittedRequest, controller.register)
 // routes.get('/block/:height', blockController.getBlockByHeight)
 // routes.get('*', (req, res, next) => next(new Error('404')))
 
@@ -44,8 +44,8 @@ function validateBody(req, res, next) {
  * @param  {Response} res Express response instance
  * @param  {Function} next Express middleware
  */
-function validateSignedRequest(req, res, next) {
-    if (!memPool.isSigned(req.body.address)) next(new Error('422'))
+function validatePermittedRequest(req, res, next) {
+    if (!memPool.isPermitted(req.body.address)) next(new Error('422'))
     next()
 }
 
