@@ -52,9 +52,11 @@ class NotaryController {
      * @param  {Function} next Express middleware
      */
     async register(req, res, next) {
+        let block
+
         const body = {
-            address: req.address,
-            star: clean(req.star)
+            address: req.body.address,
+            star: clean(req.body.star)
         }
 
         try {
@@ -80,7 +82,7 @@ function clean(star) {
         }
     }
 
-    if (star.story) cleaned.story = Buffer(star.story).toString(hex)
+    if (star.story) cleaned.story = Buffer(star.story).toString('hex')
 
     return cleaned
 }

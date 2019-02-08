@@ -39,6 +39,7 @@ function errorHandler (err, req, res, next) {
                 status: 'not found'
             })
         case '422':
+            console.log('422', err.errors, err)
             return res.status(422).json({
                 status: 'fails validation',
                 payload: err.errors
