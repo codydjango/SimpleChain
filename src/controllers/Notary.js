@@ -61,7 +61,7 @@ class NotaryController {
 
         try {
             block = await Block.create(body)
-            block = await blockChain.addBlock(block)
+            block = await blockchain.addBlock(block)
 
             if (block.star.story) block.star.storyDecoded = fromHex(block.star.story)
 
