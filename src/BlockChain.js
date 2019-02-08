@@ -147,4 +147,9 @@ class Blockchain {
     }
 }
 
-module.exports = Blockchain
+// Export singleton -- we only ever want one mempool.
+let instance = undefined
+module.exports = function(...args) {
+    if (instance) return instance
+    return instance = new Blockchain(...args)
+}

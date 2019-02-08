@@ -140,6 +140,12 @@ class Mempool {
             }
         }
     }
+
+    isSigned(address) {
+        const request = this.valid[address]
+
+        return (request && request.signed())
+    }
 }
 
 // Export singleton -- we only ever want one mempool.
