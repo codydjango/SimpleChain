@@ -109,7 +109,7 @@ class Mempool {
     getOrCreateValidationRequest(address) {
         if (!this.requests[address]) {
             this.requests[address] = ValidationRequest.create(address)
-            this.timeouts[address] = setTimeout(() => delete self.timeouts[address], WINDOW_TIME)
+            this.timeouts[address] = setTimeout(() => delete this.timeouts[address], WINDOW_TIME)
         }
 
         return this.requests[address]
