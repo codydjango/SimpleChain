@@ -6,7 +6,7 @@ module.exports = () => {
     const validationController = new ValidationController()
 
     routes.post('/requestValidation', validationController.request)
-    routes.post('/validate', validationController.validate)
+    routes.post('/message-signature/validate', validationController.validate)
 
     return routes
 }
