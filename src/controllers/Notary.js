@@ -74,4 +74,4 @@ class NotaryController {
     }
 }
 
-module.exports = NotaryController
+module.exports = new NotaryController()

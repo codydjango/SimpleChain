@@ -51,4 +51,4 @@ class BlockController {
     }
 }
 
-module.exports = BlockController
+module.exports = new BlockController()
