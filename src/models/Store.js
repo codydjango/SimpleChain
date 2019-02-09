@@ -25,6 +25,51 @@ class Store {
     }
 
     /**
+     * Find everything in the database that associates with a given address. This is a
+     * very silly way to gather items and certainly could be improved in a variety of ways
+     * (cache, filters, a different database to handle filtering and searching and instead only
+     * use levelDB as hash tables with bloom filters.
+     *
+     * @param  {String} the address
+     * @return {Promise<Array>} promise resolving to the array
+     */
+    findByAddress(address) {
+        let items = []
+
+        return new Promise((resolve, reject) => this.db.createReadStream({ keys: false, values: true })
+            .on('data', i => items.push(i))
+            .on('error', err => reject(err))
+            .on('close', () => {
+                items = items.map(i => JSON.parse(i))
+                items = items.filter(i => i.body && i.body.address && i.body.address === address)
+                items = items.map(i => JSON.stringify(i))
+
+                resolve(items)
+            }))
+    }
+
+    /**
+     * Find everything in the database that corresponds to a given hash.
+     *
+     * @param  {String} the hash of the block
+     * @return {Promise<Array>} promise resolving to the array
+     */
+    findByHash(hash) {
+        let items = []
+
+        return new Promise((resolve, reject) => this.db.createReadStream({ keys: false, values: true })
+            .on('data', i => items.push(i))
+            .on('error', err => reject(err))
+            .on('close', () => {
+                items = items.map(i => JSON.parse(i))
+                items = items.filter(i => i.hash === hash)
+                items = items.map(i => JSON.stringify(i))
+
+                resolve(items)
+            }))
+    }
+
+    /**
      * Add a new item to LevelDb
      *
      * @param {String} key
@@ -43,7 +88,7 @@ class Store {
     currentHeight() {
         let i = 0;
         return new Promise((resolve, reject) => this.db.createReadStream({ keys: true, values: true })
-            .on('data', (d) => i++)
+            .on('data', d => i++)
             .on('error', err => reject(err))
             .on('close', () => resolve(i)))
     }
@@ -56,7 +101,7 @@ class Store {
     keys() {
         const keys = []
         return new Promise((resolve, reject) => this.db.createReadStream({ keys: true, values: false })
-            .on('data', (d) => keys.push(d))
+            .on('data', d => keys.push(d))
             .on('error', err => reject(err))
             .on('close', () => resolve(keys)))
     }

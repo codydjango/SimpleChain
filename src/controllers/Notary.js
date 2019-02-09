@@ -1,21 +1,14 @@
 const mempool = require('services/mempool')
 const blockchain = require('services/blockchain')
 const Block = require('models/Block')
+const NotFoundException = require('exceptions/NotFoundException')
 
 /**
  * Express Controller for Notary service.
  */
 class NotaryController {
     /**
-     * Constructor for the BlockController class.
-     */
-    constructor() {
-        this.request = this.request.bind(this)
-        this.validate = this.validate.bind(this)
-    }
-
-    /**
-     * User create a transaction request.
+     * User create a transaction request. POST endpoint.
      *
      * @param  {Request} req Express request instance
      * @param  {Response} res Express response instance
@@ -31,7 +24,7 @@ class NotaryController {
 
     /**
      * User sends back the message with an address and signature proving
-     * they are the owner of that address.
+     * they are the owner of that address. POST endpoint.
      *
      * @param  {Request} req Express request instance
      * @param  {Response} res Express response instance
@@ -46,7 +39,8 @@ class NotaryController {
     }
 
     /**
-     * User can now register a star. If the user has provided a story, store it as hex.
+     * User can register a single star. If the user has provided a story,
+     * store it as hex. POST endpoint.
      *
      * @param  {Request} req Express request instance
      * @param  {Response} res Express response instance
@@ -69,6 +63,50 @@ class NotaryController {
 
             mempool.removePermission(body.address)
 
+            res.json(block)
+        } catch (err) {
+            next(err)
+        }
+    }
+
+    /**
+     * User can get a star by hash. GET endpoint.
+     *
+     * @param  {Request} req Express request instance
+     * @param  {Response} res Express response instance
+     * @param  {Function} next Express middleware
+     */
+    async getStar(req, res, next) {
+        const [lookup, id] = req.params.slug.split(':')
+
+        if (['hash', 'address'].indexOf(lookup) === -1) throw new NotFoundException()
+
+        try {
+            // silly logic here. The client is expecting a list for "address" lookups
+            // and a single object for "hash" lookups.
+            if (lookup === 'hash') {
+                const block = await blockchain.getBlockByHash(id)
+                res.json(block.decodeStory())
+            } else {
+                const blocks = await blockchain.getBlocksByAddress(id)
+                res.json(blocks.map(block => block.decodeStory()))
+            }
+        } catch (err) {
+            next(err)
+        }
+    }
+
+
+    /**
+     * User can get a block by height. GET endpoint.
+     *
+     * @param  {Request} req Express request instance
+     * @param  {Response} res Express response instance
+     * @param  {Function} next Express middleware
+     */
+    async getBlockByHeight(req, res, next) {
+        try {
+            const block = await blockchain.getBlockByHeight(req.params.height)
             res.json(block.decodeStory())
         } catch (err) {
             next(err)
