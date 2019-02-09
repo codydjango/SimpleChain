@@ -8,7 +8,7 @@ const NotFoundException = require('exceptions/NotFoundException')
  */
 class NotaryController {
     /**
-     * User create a transaction request. POST endpoint.
+     * User create a validation request. POST endpoint.
      *
      * @param  {Request} req Express request instance
      * @param  {Response} res Express response instance
@@ -16,7 +16,7 @@ class NotaryController {
      */
     async request(req, res, next) {
         try {
-            res.json(mempool.addTransactionRequest(req.body.address))
+            res.json(mempool.addValidationRequest(req.body.address))
         } catch (err) {
             return next(err)
         }
@@ -32,7 +32,7 @@ class NotaryController {
      */
     async validate(req, res, next) {
         try {
-            res.json(mempool.validateTransaction(req.body.address, req.body.signature))
+            res.json(mempool.validateValidationRequest(req.body.address, req.body.signature))
         } catch (err) {
             return next(err)
         }

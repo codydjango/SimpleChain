@@ -2,17 +2,17 @@ const WINDOW_TIME = 1000 * 60 * 5
 const REGISTRY = 'starRegistry'
 
 /**
- * Transaction class
+ * ValidationRequest class
  */
-class Transaction {
+class ValidationRequest {
     /**
      * Static factory method for creating new instances.
      *
      * @param  {String} address the wallet address
-     * @return {Transaction} the newly created Transaction instance
+     * @return {ValidationRequest} the newly created ValidationRequest instance
      */
     static create(address) {
-        return new Transaction(address)
+        return new ValidationRequest(address)
     }
 
     /**
@@ -34,7 +34,7 @@ class Transaction {
     }
 
     /**
-     * Constructor method for Transaction.
+     * Constructor method for ValidationRequest.
      *
      * @param  {String} address the wallet address
 \     */
@@ -42,16 +42,16 @@ class Transaction {
         this.address = address
         this.timestamp = +new Date()
         this.messageSignature = false
-        this.message = `${ this.address }:${ this.timestamp }.${ Transaction.REGISTRY }`
+        this.message = `${ this.address }:${ this.timestamp }.${ ValidationRequest.REGISTRY }`
     }
 
     /**
      * Update the validation window.
      *
-     * @return {Transaction} itself for easy chaining.
+     * @return {ValidationRequest} itself for easy chaining.
      */
     updateValidationWindow() {
-        this.validationWindow = Math.floor((Transaction.WINDOW_TIME - (+new Date() - this.timestamp)) / 1000)
+        this.validationWindow = Math.floor((ValidationRequest.WINDOW_TIME - (+new Date() - this.timestamp)) / 1000)
 
         return this
     }
@@ -59,7 +59,7 @@ class Transaction {
     /**
      * The signature is valid and the user can register.
      *
-     * @return {Transaction} itself for easy chaining
+     * @return {ValidationRequest} itself for easy chaining
      */
     sign() {
         this.messageSignature = true
@@ -79,4 +79,4 @@ class Transaction {
 }
 
 
-module.exports = Transaction
+module.exports = ValidationRequest

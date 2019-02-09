@@ -1,6 +1,6 @@
 const bitcoinMessage = require('bitcoinjs-message')
 const ValidationException = require('exceptions/ValidationException')
-const Transaction = require('models/Transaction')
+const ValidationRequest = require('models/ValidationRequest')
 
 /**
  * Mempool class
@@ -11,55 +11,55 @@ class Mempool {
      */
     constructor() {
         this.timeouts = {}
-        this.transactions = {}
+        this.pending = {}
         this.permitted = {}
     }
 
     /**
-     * Create a new transaction if it doesn't yet exist in the mempool.
+     * Create a new validation request if it doesn't yet exist in the mempool.
      * If it does, update the validation window and return it.
      *
      * @param {String} address the wallet address
-     * @return {Transaction} a transaction instance
+     * @return {ValidationRequest} a validationRequest instance
      */
-    addTransactionRequest(address) {
-        const transaction = this.getOrCreateTransaction(address)
+    addValidationRequest(address) {
+        const validationRequest = this.getOrCreateValidationRequest(address)
 
-        transaction.updateValidationWindow()
+        validationRequest.updateValidationWindow()
 
-        return transaction
+        return validationRequest
     }
 
     /**
-     * Get the transaction from the memPool or create a new one and store it in the memPool.
+     * Get the validationRequest from the memPool or create a new one and store it in the memPool.
      * Set a timer to remove it from the mempool if it is not verified within the allotted window.
 
      * @param  {String} address the wallet address
-     * @return {Transaction} the Transaction instance
+     * @return {ValidationRequest} the ValidationRequest instance
      */
-    getOrCreateTransaction(address) {
-        if (!this.transactions[address]) {
-            this.transactions[address] = Transaction.create(address)
-            this.timeouts[address] = setTimeout(() => delete this.timeouts[address], Transaction.WINDOW_TIME)
+    getOrCreateValidationRequest(address) {
+        if (!this.pending[address]) {
+            this.pending[address] = ValidationRequest.create(address)
+            this.timeouts[address] = setTimeout(() => delete this.timeouts[address], ValidationRequest.WINDOW_TIME)
         }
 
-        return this.transactions[address]
+        return this.pending[address]
     }
 
     /**
-     * Method for validating ownership of a transaction in the mempool.
+     * Method for validating ownership of a validationRequest in the mempool.
      *
      * @param {String} address the wallet address
      * @param {String} digital signature of the message for the address
-     * @throws {ValidationException} if no  transaction in the mempool or if signature is invalid
+     * @throws {ValidationException} if no  validationRequest in the mempool or if signature is invalid
      * @return {[type]} [description]
      */
-    validateTransaction(address, signature) {
-        if (!this.transactions[address]) throw new ValidationException('No transaction for this address in Mempool')
-        if (!bitcoinMessage.verify(this.transactions[address].message, address, signature)) throw new ValidationException('Signature not valid')
+    validateValidationRequest(address, signature) {
+        if (!this.pending[address]) throw new ValidationException('No validation request for this address in Mempool')
+        if (!bitcoinMessage.verify(this.pending[address].message, address, signature)) throw new ValidationException('Signature not valid')
 
-        this.permitted[address] = this.transactions[address].sign()
-        delete this.transactions[address]
+        this.permitted[address] = this.pending[address].sign()
+        delete this.pending[address]
 
         return {
             registerStar: true,

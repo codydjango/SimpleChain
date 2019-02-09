@@ -7,6 +7,7 @@ const expressValidator = require('express-validator')
 const blockchain = require('services/blockchain')
 const errorHandler = require('middleware/errorHandler')
 const routes = require('routes')
+const output = require('utilities/output')
 
 // constants
 const PORT = 8000
@@ -23,5 +24,5 @@ const PORT = 8000
         .use(expressValidator())
         .use(routes)
         .use(errorHandler)
-        .listen(PORT, () => console.log(`API listening on localhost:${ PORT }`))
+        .listen(PORT, () => output(`API listening on localhost:${ PORT }`, 'green'))
 })()
