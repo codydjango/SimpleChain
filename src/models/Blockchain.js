@@ -104,7 +104,7 @@ class Blockchain {
 
         await this.store.add(block.height, block.toString())
 
-        return block.decodeStory()
+        return block
     }
 
     /**

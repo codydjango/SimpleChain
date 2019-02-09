@@ -15,7 +15,7 @@ class NotaryController {
     }
 
     /**
-     * User create a validation request.
+     * User create a transaction request.
      *
      * @param  {Request} req Express request instance
      * @param  {Response} res Express response instance
@@ -23,14 +23,15 @@ class NotaryController {
      */
     async request(req, res, next) {
         try {
-            res.json(mempool.addValidationRequest(req.body.address))
+            res.json(mempool.addTransactionRequest(req.body.address))
         } catch (err) {
             return next(err)
         }
     }
 
     /**
-     * User sends back the message with an address and signature.
+     * User sends back the message with an address and signature proving
+     * they are the owner of that address.
      *
      * @param  {Request} req Express request instance
      * @param  {Response} res Express response instance
@@ -38,7 +39,7 @@ class NotaryController {
      */
     async validate(req, res, next) {
         try {
-            res.json(mempool.validateRequestByWallet(req.body.address, req.body.signature))
+            res.json(mempool.validateTransaction(req.body.address, req.body.signature))
         } catch (err) {
             return next(err)
         }
@@ -53,13 +54,14 @@ class NotaryController {
      */
     async register(req, res, next) {
         let block
+        let star = req.body.star
+
+        if (star.story) star.story = Buffer.from(star.story).toString('hex')
 
         const body = {
             address: req.body.address,
-            star: req.body.star
+            star: star
         }
-
-        if (star.story) star.story = Buffer.from(star.story).toString('hex')
 
         try {
             block = await Block.create(body)
@@ -67,7 +69,7 @@ class NotaryController {
 
             mempool.removePermission(body.address)
 
-            res.json(block)
+            res.json(block.decodeStory())
         } catch (err) {
             next(err)
         }

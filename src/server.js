@@ -18,11 +18,10 @@ const PORT = 8000
 ;(async () => {
     await blockchain.onReady()
 
-    const app = express()
-
-    app.use(bodyParser.json())
-    app.use(expressValidator())
-    app.use(routes)
-    app.use(errorHandler)
-    app.listen(PORT, () => console.log(`API listening on localhost:${ PORT }`))
+    express()
+        .use(bodyParser.json())
+        .use(expressValidator())
+        .use(routes)
+        .use(errorHandler)
+        .listen(PORT, () => console.log(`API listening on localhost:${ PORT }`))
 })()
