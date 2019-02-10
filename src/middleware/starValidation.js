@@ -4,6 +4,9 @@ const VALID_ATTRIBUTES = ['ra', 'dec', 'cen', 'mag', 'story']
 module.exports = [
     check('address', 'Address is required').exists(),
     check('star', 'Star data is required').exists(),
+    check('star.dec', 'Star "dec" coordinate is required').exists(),
+    check('star.ra', 'Star "ra" coordinate is required').exists(),
+    check('star.story', 'Star story is required').exists(),
     check('star', `Star data must only contain following attributes: ${ VALID_ATTRIBUTES.join(', ') }`)
         .custom(star => Object.keys(star).filter(key => VALID_ATTRIBUTES.indexOf(key) === -1).length === 0)
 ]
