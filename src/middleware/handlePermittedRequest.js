@@ -1,7 +1,6 @@
 const mempool = require('services/mempool')
 const ValidationException = require('exceptions/ValidationException')
 
-
 /**
  * Validation on whether a signed validationRequest exists in the mempool.
  *
