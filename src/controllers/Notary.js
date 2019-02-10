@@ -70,7 +70,11 @@ class NotaryController {
     }
 
     /**
-     * User can get a star by hash. GET endpoint.
+     * User can get a star with a GET request. We support two ways of querying:
+     * 'hash:{{hash}} or 'address:{{address}}. Hash returns a single object,
+     * address returns a list of blocks associated with that address. I think it's
+     * a little silly to have different response data (list or object) based on the
+     * query. Also silly to do this by parsing the url instead of using GET query string.
      *
      * @param  {Request} req Express request instance
      * @param  {Response} res Express response instance
