@@ -1,14 +1,13 @@
 # SimpleChain
 
-This simple express API demonstrates how to sign and verify transactions using bitcoin addresses.
+This express API demonstrates how to sign and verify transactions using bitcoin addresses.
 
-A few things: 
-    - Make sure the NODE_PATH is set (it is if you use the `package.json` script commands). This is so I can require using absolute paths, which is nice.
-    - The code is organized in a MVC-type architecture.
-    - The application throws and catches custom exceptions which can be evaluated with `instanceof`, which is a pattern I like to simplify logic.
-    - Validation logic is handled by express-validator, and happens in middleware.
-    - There's a main error handler that catches and processes all thrown exceptions.
-    - No real test suite, but there's a place for them. 
+Developer notes: 
+* Make sure the NODE_PATH is set (it is if you use the `package.json` script commands). This enables absolute paths in require statements, which is nice.
+* The code is organized in a MVC-type architecture.
+* The application throws and catches custom exceptions which can be evaluated with `instanceof`, which helps in the organization of code and in simplifying business logic.
+* Validation logic is handled by express-validator, and it happens in middleware.
+* There's a main error handler function that catches and processes all thrown exceptions.
 
 Install:
 `npm install`
